@@ -47,13 +47,19 @@ $$
 x = \sum_{l=0}^{n-1}x_l 2^l
 $$
 
-Now, stepping through operating $$\mathcal{F}$$ on $$\ket{x}$$:
+Now, stepping through operating $$\hat{\mathcal{F}}$$ on $$\ket{x}$$:
+
+<div class="eq-wrapper" markdown="block">
 
 $$
 \hat{\mathcal{F}}\ket{x} = \left ( \frac{1}{2^{n/2}} \sum_{k=0}^{2^{n}-1} \text{exp}\left [ i2\pi \left (\frac{kx}{2^{n}} \right ) \right ]\ket{k}\bra{x} \right ) \ket{x}
 $$
 
+</div>
+
 The algebra on the RHS goes as:
+
+<div class="eq-wrapper" markdown="block">
 
 $$
 \frac{1}{2^{n/2}} \sum_{k=0}^{2^{n}-1} \text{exp}\left [ i2\pi \left (\frac{kx}{2^{n}} \right ) \right ]\ket{k}
@@ -67,6 +73,8 @@ $$
 \frac{1}{2^{n/2}} \sum_{k_0 = 0}^{1} ... \sum_{k_l = 0}^{1} \text{exp}\left [ i2\pi \left (\frac{x}{2^{n}} \right ) \sum_{l=0}^{n-1}k_l 2^l\right ]\ket{k_0 k_1 ... k_{n-1}}
 $$
 
+</div>
+
 So far, in lines 1-2 of the RHS algebra, we've plugged in the binary string notation and including a sum over all possible values of $$k_l$$ which is $$0$$ or $$1$$ (the only measurable values of the qubit, or eigenvectors). In lines 2-3, we plugged in the binary sum notation for computing the value that the binary string $$k_0k_1...k_{n-1}$$ is representing.
 
 If you're unfamiliar with this binary sum idea, think of it as the way we compute numbers in decimal. For example, the number 321 in decimal is represented by:
@@ -77,9 +85,13 @@ $$
 
 The binary sum works _**the same way**_ just with a base of $$2$$ instead of $$10$$. Now, moving on, we can take advantage of the fact that there is a summation in the exponential term, and expand this into a product.
 
+<div class="eq-wrapper" markdown="block">
+
 $$
 \frac{1}{2^{n/2}} \prod_{l=0}^{n-1}\text{exp}\left [ i2\pi x k_l 2^{l-n}\right ]\sum_{k_0, ..., k_{n-1} = 0}^{1}\ket{k_0 k_1 ... k_{n-1}}
 $$
+
+</div>
 
 Next, we're going to use _**tensor product**_ notation to compact the bit string $$\ket{k_0 k_1 ... k_{n-1}}$$. That is:
 
@@ -101,13 +113,15 @@ $$
 
 Where in the second line, we simply stuffed the exponential term into the tensor product since it would give us the result we were looking for while associating each exponent with the correct ket.
 
-# The derivation - the quantum circuit
+# Getting the quantum circuit
 
 $$
 \hat{\mathcal{F}}\ket{x}=\frac{1}{2^{n/2}} \bigotimes_{l=0}^{n-1}\sum_{k_l = 0}^{1}e^{i 2 \pi x k_l 2^{l-n}}\ket{k_l}
 $$
 
 Awesome! Now that we have an expression for the result, let's uncover how we should act this on the qubits a part of state $$\ket{x}$$. First, we'll start by using the binary representation of $$\ket{x}$$ in our expression:
+
+<div class="eq-wrapper" markdown="block">
 
 $$
 \hat{\mathcal{F}}\ket{x}=\frac{1}{2^{n/2}}\bigotimes_{l=0}^{n-1}\sum_{k_l = 0}^{1}e^{i 2 \pi \left (\sum_{j=0}^{n-1}x_j 2^j \right ) k_l 2^{l-n}}\ket{k_l}
@@ -117,19 +131,29 @@ $$
 \hat{\mathcal{F}}\ket{x}=\frac{1}{2^{n/2}}\bigotimes_{l=0}^{n-1}\left (\ket{0} + e^{i 2 \pi \left (\sum_{j=0}^{n-1}x_j 2^{l-n+j} \right )}\ket{1} \right )
 $$
 
+</div>
+
 Where the only "trick" we did really was to expand the sum over the k kets into the states we know they will take, i.e., $$\ket{0}$$ and $$\ket{1}$$. Now, let's look into the exponential term tied with $$\ket{1}$$ a bit closer...
 
 If we were to split the exponential term into **two** terms for when $$(l-n+j) \geq 0$$ and $$(l-n+j) < 0$$, we get:
+
+<div class="eq-wrapper" markdown="block">
 
 $$
 \text{exp}{\left [i 2 \pi \sum_{j=0}^{n-1}x_j 2^{l-n+j} \right ]} = \text{exp}{\left [i 2 \pi \sum_{j=-l+n}^{n-1}x_j 2^{l-n+j} \right ]} \times \text{exp}{\left [i 2 \pi \sum_{j=0}^{-l+n-1}x_j 2^{l-n+j} \right ]}
 $$
 
+</div>
+
 Now we can see that the complex exponential in the first term on the RHS of the above equation takes the form of $$e^{ic2\pi}$$ where $$c \in \mathbb{Z}$$. Therefore, the first term only amounts to complete rotations of $$2\pi$$ leaving the term equal to one! All that's left is the second term:
+
+<div class="eq-wrapper" markdown="block">
 
 $$
 \hat{\mathcal{F}}\ket{x}=\frac{1}{2^{n/2}}\bigotimes_{l=0}^{n-1}\left (\ket{0} + e^{i 2 \pi \left (\sum_{j=0}^{n-l-1}x_j 2^{l-n+j} \right )}\ket{1} \right )
 $$
+
+</div>
 
 Finally, we get to clean up a bit of this mess! Let's make note that the term in the parenthesis is a _superposition_ state of a **single qubit**. Namely, the $$l^{\text{th}}$$ qubit. So, for $$l=n-1$$, the exponential term with the $$2$$ as the base goes from $$2^{l-n+j} \rightarrow 2^{j-n}$$. Thus, the term can only range from $$2^{-n}$$ to $$2^{-1}$$. Then looking at the summation, this means that for the last qubit ($$l=n-1$$) there is **one** term in the summation, while for the $$0^{\text{th}}$$ qubit, there are $$n-1$$ terms. 
 
@@ -163,7 +187,7 @@ Pretty neat, huh!
 
 # Conclusion
 
-![QFT Circuit](/images/qft-circuit.jpeg)
+![QFT Circuit](https://github.com/justicecald/study-lounge/tree/master/images/qft-circuit.jpeg)
 _Quantum Circuit from Quantum Computation and Quantum Information pg. 219_
 
 As you grow the number of qubits in your QFT computation (i.e., increasing $$n$$), you'll have more terms to be concerned with. Don't worry! Even thought the operations won't be as simple as applying a Hadamard gate, the implementation is still pretty straight forward. For $$n>1$$, the name of the game will be to apply controlled rotations or CNOT gates conditioned on other qubits in your computation. Not too bad!
