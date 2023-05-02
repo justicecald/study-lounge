@@ -187,7 +187,7 @@ Pretty neat, huh!
 
 # Conclusion
 
-![QFT Circuit](./images/qft-circuit.jpeg)
+![QFT Circuit](/study-lounge/images/qft-circuit.jpeg)
 _Quantum Circuit from Quantum Computation and Quantum Information pg. 219_
 
 As you grow the number of qubits in your QFT computation (i.e., increasing $$n$$), you'll have more terms to be concerned with. Don't worry! Even thought the operations won't be as simple as applying a Hadamard gate, the implementation is still pretty straight forward. For $$n>1$$, the name of the game will be to apply controlled rotations or CNOT gates conditioned on other qubits in your computation. Not too bad!
